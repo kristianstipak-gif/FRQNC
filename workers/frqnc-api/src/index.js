@@ -13,6 +13,12 @@ function json(data, status = 200, extra = {}) {
   });
 }
 
+function nullableNumber(value) {
+  if (value === null || value === undefined || value === "") return null;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
 function isOffline(value) {
   return value === true || value === 1 || value === "yes" || value === "true";
 }
@@ -51,9 +57,9 @@ export default {
           url: String(r.url || ""),
           location: String(r.loc || ""),
           antenna: String(r.antenna || ""),
-          users: Number.isFinite(Number(r.users)) ? Number(r.users) : null,
-          users_max: Number.isFinite(Number(r.users_max)) ? Number(r.users_max) : null,
-          ext_api: r.ext_api === undefined || r.ext_api === null ? null : Number(r.ext_api),
+          users: nullableNumber(r.users),
+          users_max: nullableNumber(r.users_max),
+          ext_api: nullableNumber(r.ext_api),
           offline: isOffline(r.offline),
           bands: String(r.bands || "")
         })).filter(r => {
